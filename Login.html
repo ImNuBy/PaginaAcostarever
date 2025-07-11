@@ -1,0 +1,692 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>E.E.S.T N°2</title>
+  
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/escudo2.png" rel="icon">
+  <link href="assets/img/escudo.png" rel="escudo del colegio">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <link href="assets/css/style.css" rel="stylesheet">
+
+
+</head>
+
+<script> 
+  document.addEventListener('DOMContentLoaded', function () {
+    const loginForm = document.getElementById('loginForm');
+    const rememberMeCheckbox = document.getElementById('rememberMe');
+  
+    // Verifica si hay una sesión activa
+    if (localStorage.getItem('sessionToken')) {
+      // Redirige a la página principal
+      window.location.href = 'menu.html';
+    }
+  
+    
+  });
+  
+  // Para cerrar sesión
+  function logout() {
+    localStorage.removeItem('sessionToken');
+    sessionStorage.removeItem('sessionToken');
+    window.location.href = 'login.html';
+  }
+  
+
+</script>
+
+<style>
+    body{
+        background: blueviolet;
+    }
+    /* Estilos personalizados */
+    .form-label {
+        color: #fff; /* Cambia el color según tu preferencia */
+    }
+    .resultado {
+        margin-top: 10px; /* Ajusta el margen según sea necesario */
+        color: #fff; /* Cambia el color del mensaje de resultado según tu preferencia */
+        font-weight: bold; /* Hace que el texto del resultado sea más prominente */
+    }
+    .error {
+        color: red; /* Color rojo para mensajes de error */
+        font-weight: bold; /* Hace que el texto del error sea más prominente */
+    }
+    .form-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px; /* Ajusta el margen entre las filas según sea necesario */
+    }
+    .form-row label {
+        flex: 0 0 100px; /* Ajusta el ancho máximo de las etiquetas según sea necesario */
+        margin-right: 10px; /* Ajusta el margen derecho entre las etiquetas y los inputs según sea necesario */
+    }
+    .form-row input {
+        flex: 1; /* Los inputs se expandirán para llenar el espacio restante */
+    }
+    @keyframes shadowAnimation {
+        0% { box-shadow: 0 0 10000000px rgba(0, 0, 255, 0.5); } /* Azul */
+        50% { box-shadow: 0 0 10000000px rgba(255, 255, 0, 0.5); } /* Amarillo */
+        100% { box-shadow: 0 0 10000000px rgba(255, 255, 255, 0.5); } /* Blanco */
+      }
+      
+    .Calculadora {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 400px;
+        padding: 40px;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, .5);
+        box-sizing: border-box;
+        border-radius: 10px;
+        animation: shadowAnimation 5s infinite alternate; /* Aplica la animación de sombra */
+    }
+    html {
+height: 100%;
+}
+h1{
+color: #fff;
+}
+body {
+margin: 0;
+padding: 0;
+font-family: sans-serif;
+background: blueviolet;
+
+}
+.Calculadora {
+position: absolute;
+top: 50%;
+left: 50%;
+width: 400px;
+padding: 40px;
+transform: translate(-50%, -50%);
+background: rgba(0, 0, 0, .5);
+box-sizing: border-box;
+box-shadow: 0 15px 25px rgba(0, 0, 0, .5);
+border-radius: 10px;
+
+
+}
+.Calculadora h2 {
+margin: 0 0 30px;
+padding: 0;
+color: #fff;
+text-align: center;
+}
+
+.Calculadora .elecciones input{
+width: 100%;
+padding: 10px 0;
+font-size: 16px;
+color: #fff;
+margin-bottom: 30px;
+border: none;
+border-bottom: 1px solid #fff;
+outline: none;
+background: transparent;
+
+}
+
+.Calculadora .elecciones label {
+position: absolute;
+top: 0;
+left: 0;
+padding: 10px 0;
+font-size: 16px;
+color: #fff;
+pointer-events: none;
+transition: .5s;
+}
+.Calculadora .elecciones input:focus~label
+.Calculadora .elecciones input:valid~label {
+top: -20px;
+left: 0;
+color: #03e9f4;
+font-size: 12px;
+}
+.Calculadora form a {
+position: relative;
+display: inline-block;
+padding: 10px ;
+color: #03e9f4;
+font-size: 16px;
+text-decoration: none;
+
+overflow: hidden;
+transition: .5s;
+margin-top: 0px;
+letter-spacing: 4px;
+}
+.Calculadora a:hover {
+background: #03e9f4;
+color: #fff;
+border-radius: 5px;
+box-shadow: 0 0 5px #03e9f4,
+    0 0 25px #03e9f4,
+    0 0 50px #03e9f4,
+    0 0 100px #03e9f4;
+
+}
+.Calculadora a span{
+position: absolute;
+display: block;
+}
+
+.Calculadora a span:nth-last-child(1){
+top: 0;
+left: -100%;
+width: 100%;
+height: 2px;
+background: linear-gradient(90deg, transparent);
+animation: btn-anim1 1s linear infinite;    
+
+} 
+
+@keyframes btn-anim1 {
+0% {
+    left: -100%;
+}
+50%,
+100% {
+    left: 100%;
+}
+}
+
+.Calculadora a span:nth-last-child(2){
+top: -100%;
+right: 0;
+width: 2px;
+height: 100%;
+background: linear-gradient(180deg);
+animation: btn-anim2 1s linear infinite;
+animation-delay: .25s;
+}
+
+@keyframes btn-anim2{
+0% {
+    top: -100%;
+}
+50%,
+100%{
+    top: 100%;
+
+}
+}
+
+.Calculadora a span:nth-last-child(3){
+
+bottom: 0;
+right: -100%;
+width: 100%;
+height: 2px;
+background: linear-gradient(270deg);
+animation: btn-anim3 1s linear infinite;
+animation-delay: .5s;
+
+}
+
+@keyframes btn-anim3 {
+0%{
+    right: -100%;
+}
+50%,
+100%{
+    right: 100%;
+}
+}
+
+.Calculadora a span:nth-last-child(4) {
+
+bottom: -100%;
+left: 0;
+width: 2px;
+height: 100%;
+background: linear-gradient(360deg,);
+animation: btn-anim4 1s linear infinite;
+}
+
+@keyframes btn-anim4 {
+0% {
+    bottom: -100;
+
+}
+50%,
+100%{
+    bottom: 100%;
+}
+
+}
+.Calculadora .elecciones input {
+width: 100%;
+padding: 12px;
+font-size: 16px;
+color: #fff;
+margin-bottom: 20px;
+border: 2px solid #03e9f4;
+outline: none;
+background: transparent;
+transition: border-color 0.3s, color 0.3s;
+position: relative; /* Necesario para posicionar el texto */
+}
+
+.Calculadora .elecciones input:focus {
+border-color: #fff;
+}
+
+.Calculadora .elecciones input:focus ~ label,
+.Calculadora .elecciones input:not(:placeholder-shown) ~ label {
+top: -20px;
+left: 0;
+color: #fff;
+font-size: 12px;
+transition: all 0.3s; /* Añade una transición suave */
+}
+
+.Calculadora .elecciones label {
+position: absolute;
+top: 50%; /* Ajusta la posición vertical */
+left: 0;
+transform: translateY(-50%); /* Centra verticalmente el texto */
+padding: 0 10px; /* Espaciado adicional */
+font-size: 16px;
+color: #fff;
+pointer-events: none;
+transition: all 0.3s; /* Añade una transición suave */
+opacity: 0; /* Inicialmente oculta el texto */
+}
+
+.Calculadora .elecciones input:focus ~ label {
+opacity: 1; /* Muestra el texto cuando el input está enfocado */
+}
+
+</style>
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center justify-content-between">
+      <h1 class="logo"><a href="index.html">E.E.S.T N°2</a></h1>
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <div id="hero" class="hero route bg-image" style="background-image: url(assets/img/colegio.png)">
+    <div class="overlay-itro"></div>
+    <div class="hero-content display-table">
+      <div class="table-cell">
+        <div class="container">
+          <p class="hero-subtitle"><span class="typed" data-typed-items="Programación, Electrónica"></span></p>
+        </div>
+      </div>
+    </div>
+  </div><!-- End Hero Section -->
+
+  <div class="Calculadora elecciones">
+    <h1 class="hero-title mb-4">Técnica N°2</h1>
+    
+    <form action="/forms/login.php" method="POST" id="myForm">
+      <div class="form-row">
+        <label for="eleccion" class="form-label">Que sos?</label>
+        <select name="eleccion" id="eleccion">
+          <option value="alumno">Estudiante</option>
+          <option value="profesor">Personal Escolar</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="txtusuario" class="form-label">Usuario:</label>
+        <input type="text" name="txtusuario" id="txtusuario"> 
+      </div>
+      <div class="form-row">
+        <label for="txtpassword" class="form-label">Contraseña:</label>
+        
+        <div class="password-input-container">
+          <input type="password" name="txtpassword" id="txtpassword"> 
+          <button type="button" id="togglePassword" class="toggle-password">
+            <i id="eyeIcon" class="far fa-eye"></i>
+          </button>
+          <label>
+            <input type="checkbox" id="rememberMe"> Mantener sesión iniciada
+          </label>
+        </div>
+      </div>
+      
+      <input type="submit" value="Ingresar" id="Login" style="display: none;">
+      <a href="#" id="FalseLogin" class="custom-signup">
+        <span></span>
+        
+        Login
+      
+        <div style="margin-left: 100px;"></div>
+
+      <a href="#" id="custom-Submit" class="custom-signup">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        Sign Up
+      </a>
+      </a>
+      <a href="#" id="botonOlvidar" class="custom-signup2">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        Olvidaste tu contraseña?
+      </a>
+      
+
+      
+
+        <style> 
+            /* Estilo base del botón de registro */
+  .custom-signup2{
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #03e9f4;
+    text-decoration: none;
+  
+    border: 2px solid transparent;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  /* Estilo del resplandor */
+  .custom-signup2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border-radius: 5px;
+    z-index: -1; /* Colocar detrás del contenido del botón */
+    transition: transform 0.6s ease-out;
+  }
+
+  /* Estilo del resplandor cuando el mouse pasa sobre el botón */
+  .custom-signup2:hover::before {
+    transform: scale(1.2); /* Ajustar el tamaño del resplandor */
+  }
+            
+  #custom-Submit {
+    color: #03e9f4; /* Color del texto similar al botón Cancelar */
+    font-size: 18px; /* Tamaño del texto similar al botón Cancelar */
+    background-color: transparent; /* Fondo transparente similar al botón Cancelar */
+    border: none; /* Borde transparente similar al botón Cancelar */
+    cursor: pointer; /* Cambiar el cursor al pasar sobre el botón similar al botón Cancelar */
+  }
+  
+  #botonOlvidar {
+    color: #03e9f4; /* Color del texto similar al botón Cancelar */
+    font-size: 18px; /* Tamaño del texto similar al botón Cancelar */
+    background-color: transparent; /* Fondo transparente similar al botón Cancelar */
+    border: none; /* Borde transparente similar al botón Cancelar */
+    cursor: pointer; /* Cambiar el cursor al pasar sobre el botón similar al botón Cancelar */
+  }
+  
+  #FalseLogin {
+    color: #03e9f4; /* Color del texto similar al botón Cancelar */
+    font-size: 18px; /* Tamaño del texto similar al botón Cancelar */
+    background-color: transparent; /* Fondo transparente similar al botón Cancelar */
+    border: none; /* Borde transparente similar al botón Cancelar */
+    cursor: pointer; /* Cambiar el cursor al pasar sobre el botón similar al botón Cancelar */
+  }</style>
+   </form>
+      
+<!--Sign up-->
+<form action="forms/SignUp.php" method="POST" id="signupForm" style="display: none;">
+  <div class="form-row">
+    <label for="eleccion" class="form-label">Que sos?</label>
+    <select name="eleccion" id="eleccionSU">
+      <option value="alumno">Estudiante</option>
+      <option value="profesor">Personal Escolar</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="txtusuario" class="form-label">Nuevo Usuario:</label>
+    <input type="text" name="txtNewusuario" id="txtNewusuario"> 
+  </div>
+  <div class="form-row">
+    <label for="txtpassword" class="form-label">Nueva Contraseña:</label>
+    
+    <div class="password-input-container">
+      <input type="password" name="txtNewpassword" id="txtNewpassword"> 
+      <button type="button" id="toggleNPassword" class="toggle-password">
+        <i id="NeyeIcon" class="far fa-eye"></i>
+      </button>
+    </div>
+  </div>
+  <a href="#" id="falsesignup" class="custom-signup">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    Sign Up
+  </a>
+  <input type="submit" value="Ingresar" id="SignUp" style="display: none;">
+  <button type="button" id="buttonSignUp" class="custom-submit"  style="display: none;">
+    Sign Up
+    <div style="margin-left: 100px;"></div>
+  </button>
+
+  <a href="#" id="cancelSignup" class="custom-signup">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    Cancel
+  </a>
+  </a>
+</form>
+<!--RecupForm-->
+<form action="forms/Recuperarpass.php" method="POST" id="RecupForm" style="display: none;">
+  <div class="form-row">
+    <label for="eleccion" class="form-label">Que sos?</label>
+    <select name="eleccion" id="eleccionSU2">
+      <option value="alumno">Estudiante</option>
+      <option value="profesor">Personal Escolar</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="txtRecusuario" class="form-label">Ingrese su Usuario:</label>
+    <input type="text" name="txtRecusuario" id="txtRecusuario"> 
+  </div>
+  <div class="form-row">
+    <label for="txtMail" class="form-label">Ingrese un Mail:</label>
+    <input type="text" name="txtMail" id="txtMail"> 
+  </div>
+  <div class="form-row" id="codigoRow" style="display: none;">
+    <label for="txtCodigo" class="form-label">Ingrese el Código de Verificación:</label>
+    <input type="text" name="txtCodigo" id="txtCodigo"> 
+  </div>
+  <a href="#" id="MandarCodigoFalse" class="custom-signup">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    Mandar Codigo
+  </a>
+  <input type="submit" value="Ingresar" id="MandarCodigo" style="display: none;">
+  <button type="button" id="BotonMandarCodigo" class="custom-submit"  style="display: none;">
+    Mandar Codigo
+    <div style="margin-left: 100px;"></div>
+  </button>
+
+  <a href="#" id="cancelRecup" class="custom-signup">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    Cancel
+  </a>
+  </a>
+</form>
+ 
+
+
+
+<script>
+  // Event listener para el botón "Cancelar Recuperacion"
+document.getElementById('cancelRecup').addEventListener('click', function (event) {
+  event.preventDefault();
+  document.getElementById('RecupForm').style.display = 'none';
+  document.getElementById('myForm').style.display = 'block';
+});
+
+  // Event listener para el botón "RecupPass"
+document.getElementById('botonOlvidar').addEventListener('click', function (event) {
+  event.preventDefault();
+  document.getElementById('myForm').style.display = 'none';
+  document.getElementById('RecupForm').style.display = 'block';
+});
+
+   // Event listener para el botón "Login"
+document.getElementById('MandarCodigoFalse').addEventListener('click', function (event) {
+  event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+  document.getElementById('MandarCodigo').click(); // Simula el clic en el botón de enviar
+});
+
+  // Event listener para el botón "Login"
+document.getElementById('FalseLogin').addEventListener('click', function (event) {
+  event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+  document.getElementById('Login').click(); // Simula el clic en el botón de enviar
+});
+
+// Event listener para el botón "Sign Up"
+document.getElementById('custom-Submit').addEventListener('click', function (event) {
+  event.preventDefault();
+  document.getElementById('signupForm').style.display = 'block';
+  document.getElementById('myForm').style.display = 'none';
+});
+
+// Event listener para el botón "Cancelar Registro"
+document.getElementById('cancelSignup').addEventListener('click', function (event) {
+  event.preventDefault();
+  document.getElementById('signupForm').style.display = 'none';
+  document.getElementById('myForm').style.display = 'block';
+});
+
+// Event listener para el botón de enviar del formulario de registro
+
+  document.getElementById('falsesignup').addEventListener('click', function (event) {
+    event.preventDefault(); // Evitar envío automático del formulario
+    console.log("Botón Sign Up clickeado"); // Verificar si se está ejecutando la función
+      // Obtener la contraseña ingresada
+      var contraseña = document.getElementById("txtNewpassword").value;
+    
+      // Verificar que la contraseña cumpla con los requisitos
+      var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      if (!regex.test(contraseña)) {
+        // Mostrar mensaje de error si la contraseña no cumple con los requisitos
+        alert("La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial, y tener al menos 8 caracteres de longitud.");
+        return false; // Detener el envío del formulario si la contraseña no es válida
+      }
+    
+      // Si la contraseña cumple con los requisitos, enviar el formulario
+      document.getElementById('signupForm').submit();
+    });
+  
+;
+
+// Event listener para el botón togglePassword
+document.getElementById('toggleNPassword').addEventListener('click', function() {
+  var passwordInput = document.getElementById('txtNewpassword');
+  var eyeIcon = document.getElementById('NeyeIcon');
+
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    eyeIcon.classList.remove('fa-eye');
+    eyeIcon.classList.add('fa-eye-slash');
+  } else {
+    passwordInput.type = 'password';
+    eyeIcon.classList.remove('fa-eye-slash');
+    eyeIcon.classList.add('fa-eye');
+  }
+});
+
+// Event listener para el botón togglePassword login
+document.getElementById('togglePassword').addEventListener('click', function() {
+  var passwordInput = document.getElementById('txtpassword');
+  var eyeIcon = document.getElementById('eyeIcon');
+
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    eyeIcon.classList.remove('fa-eye');
+    eyeIcon.classList.add('fa-eye-slash');
+  } else {
+    passwordInput.type = 'password';
+    eyeIcon.classList.remove('fa-eye-slash');
+    eyeIcon.classList.add('fa-eye');
+  }
+});
+
+
+document.getElementById('myForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // Evita el envío automático del formulario
+  
+  // Obtener los valores de usuario, contraseña, y rol del formulario
+  var usuario = document.getElementById('txtusuario').value;
+  var contraseña = document.getElementById('txtpassword').value;
+  var rol = document.getElementById('eleccion').value; // Obtener el rol seleccionado
+
+  // Enviar una solicitud AJAX para verificar las credenciales
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'forms/login.php');
+  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhr.onload = function() {
+      if (xhr.status === 200) {
+          // Si la respuesta del servidor es éxito, redirigir a la página de inicio
+          if (xhr.responseText.trim() === 'success') {
+              window.location.href = 'Menu.html';
+          } else {
+              // Si las credenciales son incorrectas, mostrar un mensaje de error
+              alert('Usuario, contraseña o rol incorrectos');
+          }
+      } else {
+          // Si hay un error en la solicitud AJAX, mostrar un mensaje de error
+          alert('Error en la solicitud');
+      }
+  };
+
+  // Enviar los datos del formulario al servidor, incluyendo el rol
+  xhr.send('txtusuario=' + encodeURIComponent(usuario) + '&txtpassword=' + encodeURIComponent(contraseña) + '&rol=' + encodeURIComponent(rol));
+});
+
+      </script>
+    
+    
+  </div>
+
+  
+  
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+ </body>
+</html>
