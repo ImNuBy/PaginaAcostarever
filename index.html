@@ -20,9 +20,257 @@
 
   <link href="assets/css/style.css" rel="stylesheet">
 
+  <style>
+    /* Estilos para el menú de usuario logueado */
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .user-info {
+      color: #fff;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .user-role-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .user-role-badge.admin {
+      background: #ff6b6b;
+    }
+    
+    .user-role-badge.profesor {
+      background: #4ecdc4;
+    }
+    
+    .user-role-badge.alumno {
+      background: #45b7d1;
+    }
+    
+    .menu-btn, .logout-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .menu-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      text-decoration: none;
+    }
+    
+    .logout-btn:hover {
+      background: rgba(255, 107, 107, 0.7);
+      border-color: #ff6b6b;
+    }
+    
+    /* Ocultar elementos por defecto */
+    .auth-section {
+      display: none;
+    }
+    
+    .auth-section.show {
+      display: flex;
+      align-items: center;
+    }
 
- 
-  <!-- ======================================================== -->
+    /* ===== SISTEMA DE NAVEGACIÓN RÁPIDA ===== */
+    
+    /* Breadcrumbs */
+    .quick-nav-breadcrumbs {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px 0;
+      position: fixed;
+      top: 76px;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      transition: all 0.3s ease;
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    
+    .quick-nav-breadcrumbs.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .breadcrumb-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    .breadcrumb-path {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-size: 14px;
+    }
+    
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .breadcrumb-separator {
+      color: #888;
+      margin: 0 5px;
+    }
+    
+    .breadcrumb-current {
+      color: #4ecdc4;
+      font-weight: bold;
+    }
+    
+    /* Botón de regreso rápido */
+    .quick-return-btn {
+      background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    
+    .quick-return-btn:hover {
+      background: linear-gradient(45deg, #45b7d1, #4ecdc4);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+      color: #fff;
+      text-decoration: none;
+    }
+    
+    .quick-return-btn i {
+      font-size: 16px;
+    }
+
+    /* Notificación flotante */
+    .navigation-toast {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 10px;
+      border-left: 4px solid #4ecdc4;
+      z-index: 1000;
+      transform: translateX(400px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      max-width: 300px;
+    }
+    
+    .navigation-toast.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    
+    .toast-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #4ecdc4;
+    }
+    
+    .toast-message {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    /* Botón flotante de acceso rápido */
+    .floating-quick-access {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: scale(0);
+    }
+    
+    .floating-quick-access.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    .floating-btn {
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      color: #fff;
+      border: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .floating-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Ajustar contenido cuando hay breadcrumbs */
+    .content-with-breadcrumbs {
+      margin-top: 60px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .breadcrumb-container {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+      
+      .quick-nav-breadcrumbs {
+        top: 70px;
+      }
+      
+      .floating-quick-access {
+        bottom: 20px;
+        right: 20px;
+      }
+      
+      .floating-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -32,8 +280,6 @@
     <div class="container d-flex align-items-center justify-content-between">
 
       <h1 class="logo"><a href="index.html">E.E.S.T N°2</a></h1>
-      <!-- Uncomment below if you prefer to use an image logo -->
-      <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
       <nav id="navbar" class="navbar">
         <ul>
@@ -41,15 +287,71 @@
           <li><a class="nav-link scrollto" href="#about">Nosotros</a></li>
           <li><a class="nav-link scrollto" href="#services">Orientaciones</a></li>
           <li><a class="nav-link scrollto " href="#work">Proyectos</a></li>
-        
           <li><a class="nav-link scrollto" href="#contact">Contacto</a></li>
-          <li><a href="Login.html" >Iniciar Sesion</a></li>
+          
+          <!-- Sección para usuario NO logueado -->
+          <li id="loginSection" class="auth-section">
+            <a href="Login.html">Iniciar Sesión</a>
+          </li>
+          
+          <!-- Sección para usuario logueado -->
+          <li id="userSection" class="auth-section">
+            <div class="user-menu">
+              <div class="user-info">
+                <span id="userIcon">👤</span>
+                <span id="userName">Usuario</span>
+                <span id="userRoleBadge" class="user-role-badge">Rol</span>
+              </div>
+              <a href="#" id="menuBtn" class="menu-btn">Mi Menú</a>
+              <button onclick="logout()" class="logout-btn">Cerrar Sesión</button>
+            </div>
+          </li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
+      </nav>
 
     </div>
   </header><!-- End Header -->
+
+  <!-- ======= Sistema de Navegación Rápida ======= -->
+  <div id="quickNavBreadcrumbs" class="quick-nav-breadcrumbs">
+    <div class="breadcrumb-container">
+      <div class="breadcrumb-path">
+        <div class="breadcrumb-item">
+          <i class="bi bi-house-fill"></i>
+          <span>Inicio</span>
+        </div>
+        <span class="breadcrumb-separator">→</span>
+        <div class="breadcrumb-item">
+          <span id="breadcrumbIcon">📍</span>
+          <span>Estuviste en:</span>
+        </div>
+        <span class="breadcrumb-separator">→</span>
+        <div class="breadcrumb-item breadcrumb-current" id="breadcrumbCurrent">
+          Página Anterior
+        </div>
+      </div>
+      <a href="#" id="quickReturnBtn" class="quick-return-btn">
+        <i class="bi bi-arrow-return-left"></i>
+        <span>Regresar</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ======= Notificación Toast ======= -->
+  <div id="navigationToast" class="navigation-toast">
+    <div class="toast-title">Navegación Rápida</div>
+    <div class="toast-message" id="toastMessage">
+      Mensaje de navegación
+    </div>
+  </div>
+
+  <!-- ======= Botón Flotante de Acceso Rápido ======= -->
+  <div id="floatingQuickAccess" class="floating-quick-access">
+    <button class="floating-btn" onclick="openQuickAccessMenu()" title="Acceso Rápido">
+      <i class="bi bi-lightning-fill"></i>
+    </button>
+  </div>
 
   <!-- ======= Hero Section ======= -->
   <div id="hero" class="hero route bg-image" style="background-image: url(assets/img/colegio.png)">
@@ -57,15 +359,14 @@
     <div class="hero-content display-table">
       <div class="table-cell">
         <div class="container">
-          <!--<p class="display-6 color-d">Hello, world!</p>-->
           <h1 class="hero-title mb-4">Técnica N°2</h1>
           <p class="hero-subtitle"><span class="typed" data-typed-items="Programación, Electrónica"></span></p>
-          <!-- <p class="pt-3"><a class="btn btn-primary btn js-scroll px-4" href="#about" role="button">Learn More</a></p> -->
         </div>
       </div>
     </div>
   </div><!-- End Hero Section -->
 
+  <!-- Contenido principal -->
   <main id="main">
 
     <!-- ======= About Section ======= -->
@@ -112,9 +413,7 @@
                       </h5>
                     </div>
                     <p class="lead">
-                      somos una institucion especializada en dos orientaciones con buenas salidas laborales las cuales son Electrónica y Programación, en esta escuela intentamos crear un ambiente saludable y respetuoso entre alumnos y profesores. <label for=""></label>
-                    </p>
-                   
+                      somos una institucion especializada en dos orientaciones con buenas salidas laborales las cuales son Electrónica y Programación, en esta escuela intentamos crear un ambiente saludable y respetuoso entre alumnos y profesores.
                     </p>
                   </div>
                 </div>
@@ -150,9 +449,7 @@
               </div>
               <div class="service-content">
                 <h2 class="s-title">Electronica</h2>
-                <p class="s-description text-center">
-                
-
+                <p class="s-description text-center"></p>
               </div>
             </div>
           </div>
@@ -164,22 +461,13 @@
               </div>
               <div class="service-content">
                 <h2 class="s-title">Programación</h2>
-                <p class="s-description text-center">
-                  
-                </p>
+                <p class="s-description text-center"></p>
               </div>
             </div>
-          </div>
-         
-         
-          
           </div>
         </div>
       </div>
     </section><!-- End Services Section -->
-
-      
-    </div><!-- End Counter Section -->
 
     <!-- ======= Portfolio Section ======= -->
     <section id="work" class="portfolio-mf sect-pt4 route">
@@ -387,16 +675,11 @@
               </div>
               <div class="swiper-pagination"></div>
             </div>
-
-            <!-- <div id="testimonial-mf" class="owl-carousel owl-theme">
-          
-        </div> -->
           </div>
         </div>
       </div>
     </div><!-- End Testimonials Section -->
 
-    
     <!-- ======= Contact Section ======= -->
     <section id="contact" class="paralax-mf footer-paralax bg-image sect-mt4 route" style="background-image: url(assets/img/colegio.png)">
       <div class="overlay-mf"></div>
@@ -415,31 +698,10 @@
                     <div>
                       <form action="forms/contact.php" method="post" role="form" class="php-email-form">
                         <div class="row">
-                          <div class="col-md-12 mb-3">
-                            <div class="form-group">
-                              
-                            </div>
-                          </div>
-                          <div class="col-md-12 mb-3">
-                            <div class="form-group">
-                        
-                            </div>
-                          </div>
                           <div class="col-md-12 mb-3 mapa">
                             <div class="form-group">
                               <iframe width="500" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3288.9193341640507!2d-58.581477923535815!3d-34.479570550953454!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcbac98a320135%3A0x85ad55205e252b6a!2sEscuela%20Secundaria%20T%C3%A9cnica%20N%C2%B0%202%20de%20San%20Isidro!5e0!3m2!1ses-419!2sar!4v1699481240816!5m2!1ses-419!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                             </div>
-                          </div>
-                          <div class="col-md-12">
-                            <div class="form-group">
-                              
-                            </div>
-                          </div>
-                          <div class="col-md-12 text-center my-3">
-                           
-                          </div>
-                          <div class="col-md-12 text-center">
-                           
                           </div>
                         </div>
                       </form>
@@ -452,7 +714,6 @@
                       </h5>
                     </div>
                     <div class="more-info">
-                     
                       <ul class="list-ico">
                         <li><span class="bi bi-geo-alt"></span>  Patagonia 514, B1609 ELL, Provincia de Buenos Aires</li>
                         <li><span class="bi bi-phone"></span>  (+54) 1169024495</li>
@@ -463,7 +724,6 @@
                       <ul>
                         <li><a href="https://www.facebook.com/tecnicanro2/?locale=es_LA"><span class="ico-circle"><i class="bi bi-facebook"></i></span></a></li>
                         <li><a href="https://www.instagram.com/somos_la_t2/"><span class="ico-circle"><i class="bi bi-instagram"></i></span></a></li>
-                  
                       </ul>
                     </div>
                   </div>
@@ -484,15 +744,6 @@
         <div class="col-sm-12">
           <div class="copyright-box">
             <p class="copyright">&copy; Escuela <strong> Tecnica N°2</strong>. inicio</p>
-            <div class="credits">
-              <!--
-              All the links in the footer should remain intact.
-              You can delete the links only if you purchased the pro version.
-              Licensing information: https://bootstrapmade.com/license/
-              Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=DevFolio
-            -->
-             
-            </div>
           </div>
         </div>
       </div>
@@ -501,6 +752,405 @@
 
   <div id="preloader"></div>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- JavaScript para sistema de navegación rápida -->
+  <script>
+    // Variables del sistema de navegación
+    let lastVisitedPage = null;
+    let navigationHistory = [];
+
+    // Configuración de páginas para el sistema
+    const pageConfig = {
+      'home.html': {
+        name: 'Chat Escolar',
+        icon: '💬',
+        description: 'Sistema de comunicación'
+      },
+      'menual.html': {
+        name: 'Mi Espacio',
+        icon: '👨‍🎓',
+        description: 'Panel de estudiante'
+      },
+      'menupr.html': {
+        name: 'Mi Panel',
+        icon: '👨‍🏫',
+        description: 'Panel de personal'
+      },
+      'menuad.html': {
+        name: 'Panel Admin',
+        icon: '👑',
+        description: 'Panel de administrador'
+      },
+      'Electronica.html': {
+        name: 'Electrónica',
+        icon: '🔌',
+        description: 'Orientación Electrónica'
+      },
+      'programacion.html': {
+        name: 'Programación',
+        icon: '💻',
+        description: 'Orientación Programación'
+      },
+      'Brazo.html': {
+        name: 'Brazo Robot',
+        icon: '🤖',
+        description: 'Proyecto de robótica'
+      },
+      'portfolio-details.html': {
+        name: 'Limpiador',
+        icon: '🧹',
+        description: 'Proyecto automático'
+      },
+      'teslita.html': {
+        name: 'AutoParking',
+        icon: '🚗',
+        description: 'Estacionamiento automático'
+      },
+      'futbolin.html': {
+        name: 'Robot Fútbol',
+        icon: '⚽',
+        description: 'Robot de entretenimiento'
+      },
+      'tanque.html': {
+        name: 'Tanque',
+        icon: '🚛',
+        description: 'Proyecto con bluetooth'
+      },
+      'Tablero.html': {
+        name: 'Tablero',
+        icon: '⚡',
+        description: 'Simulador eléctrico'
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      checkUserSession();
+      initializeNavigation();
+      setupNavigationListeners();
+    });
+
+    function checkUserSession() {
+      const sessionToken = localStorage.getItem('sessionToken');
+      const userRole = localStorage.getItem('userRole');
+      const userName = localStorage.getItem('userName');
+
+      const loginSection = document.getElementById('loginSection');
+      const userSection = document.getElementById('userSection');
+
+      if (sessionToken && userRole && userName) {
+        showUserSection(userName, userRole);
+        loginSection.classList.remove('show');
+        userSection.classList.add('show');
+        
+        // Mostrar botón flotante para usuarios logueados
+        setTimeout(() => {
+          document.getElementById('floatingQuickAccess').classList.add('show');
+        }, 1000);
+      } else {
+        loginSection.classList.add('show');
+        userSection.classList.remove('show');
+      }
+    }
+
+    function showUserSection(userName, userRole) {
+      document.getElementById('userName').textContent = userName;
+      
+      const userIcon = document.getElementById('userIcon');
+      const userRoleBadge = document.getElementById('userRoleBadge');
+      const menuBtn = document.getElementById('menuBtn');
+
+      switch(userRole) {
+        case 'admin':
+          userIcon.textContent = '👑';
+          userRoleBadge.textContent = 'Administrador';
+          userRoleBadge.className = 'user-role-badge admin';
+          menuBtn.href = 'menuad.html';
+          menuBtn.textContent = 'Panel Admin';
+          break;
+        case 'profesor':
+          userIcon.textContent = '👨‍🏫';
+          userRoleBadge.textContent = 'Personal';
+          userRoleBadge.className = 'user-role-badge profesor';
+          menuBtn.href = 'menupr.html';
+          menuBtn.textContent = 'Mi Panel';
+          break;
+        case 'alumno':
+          userIcon.textContent = '👨‍🎓';
+          userRoleBadge.textContent = 'Estudiante';
+          userRoleBadge.className = 'user-role-badge alumno';
+          menuBtn.href = 'menual.html';
+          menuBtn.textContent = 'Mi Espacio';
+          break;
+      }
+    }
+
+    function initializeNavigation() {
+      // Verificar si hay una página anterior guardada
+      const lastPage = localStorage.getItem('lastVisitedPage');
+      const currentTime = new Date().getTime();
+      const lastVisitTime = localStorage.getItem('lastVisitTime');
+      
+      // Mostrar navegación rápida si la página anterior existe y no han pasado más de 30 minutos
+      if (lastPage && lastVisitTime && (currentTime - lastVisitTime) < 1800000) {
+        showQuickNavigation(lastPage);
+      }
+      
+      // Limpiar página anterior muy antigua
+      if (lastVisitTime && (currentTime - lastVisitTime) > 1800000) {
+        localStorage.removeItem('lastVisitedPage');
+        localStorage.removeItem('lastVisitTime');
+      }
+    }
+
+    function showQuickNavigation(pagePath) {
+      const pageInfo = pageConfig[pagePath];
+      if (!pageInfo) return;
+
+      const breadcrumbs = document.getElementById('quickNavBreadcrumbs');
+      const breadcrumbCurrent = document.getElementById('breadcrumbCurrent');
+      const breadcrumbIcon = document.getElementById('breadcrumbIcon');
+      const quickReturnBtn = document.getElementById('quickReturnBtn');
+
+      // Actualizar breadcrumbs
+      breadcrumbCurrent.textContent = pageInfo.name;
+      breadcrumbIcon.textContent = pageInfo.icon;
+      quickReturnBtn.href = pagePath;
+
+      // Mostrar breadcrumbs
+      breadcrumbs.classList.add('show');
+      
+      // Ajustar contenido
+      document.getElementById('main').classList.add('content-with-breadcrumbs');
+
+      // Mostrar notificación toast
+      showNavigationToast(pageInfo);
+    }
+
+    function showNavigationToast(pageInfo) {
+      const toast = document.getElementById('navigationToast');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      toastMessage.innerHTML = `¿Quieres regresar a <strong>${pageInfo.name}</strong>?<br>
+                               <small>${pageInfo.description}</small>`;
+      
+      toast.classList.add('show');
+      
+      // Ocultar toast después de 5 segundos
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 5000);
+    }
+
+    function setupNavigationListeners() {
+      // Escuchar clicks en enlaces para guardar la página actual
+      document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (link && link.href) {
+          const url = new URL(link.href);
+          const pathname = url.pathname;
+          const filename = pathname.split('/').pop();
+          
+          // Solo guardar si es una página de nuestro sistema
+          if (pageConfig[filename] && filename !== 'index.html') {
+            // Guardar la página actual como última visitada
+            localStorage.setItem('lastVisitedPage', filename);
+            localStorage.setItem('lastVisitTime', new Date().getTime());
+          }
+        }
+      });
+
+      // Botón de regreso rápido
+      document.getElementById('quickReturnBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetPage = this.href;
+        
+        // Ocultar breadcrumbs
+        document.getElementById('quickNavBreadcrumbs').classList.remove('show');
+        
+        // Mostrar toast de confirmación
+        showConfirmationToast('Regresando a la página anterior...');
+        
+        // Redirigir después de la animación
+        setTimeout(() => {
+          window.location.href = targetPage;
+        }, 500);
+      });
+
+      // Cerrar breadcrumbs al hacer scroll
+      let scrollTimeout;
+      window.addEventListener('scroll', function() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          if (window.scrollY > 200) {
+            document.getElementById('quickNavBreadcrumbs').classList.remove('show');
+            document.getElementById('main').classList.remove('content-with-breadcrumbs');
+          }
+        }, 100);
+      });
+    }
+
+    function openQuickAccessMenu() {
+      const userRole = localStorage.getItem('userRole');
+      if (!userRole) {
+        window.location.href = 'Login.html';
+        return;
+      }
+
+      // Crear menú contextual
+      const quickMenus = {
+        'admin': [
+          { name: 'Panel Admin', url: 'menuad.html', icon: '👑' },
+          { name: 'Chat Escolar', url: 'home.html', icon: '💬' },
+          { name: 'Proyectos', url: '#work', icon: '🔧' },
+          { name: 'Orientaciones', url: '#services', icon: '📚' }
+        ],
+        'profesor': [
+          { name: 'Mi Panel', url: 'menupr.html', icon: '👨‍🏫' },
+          { name: 'Chat Escolar', url: 'home.html', icon: '💬' },
+          { name: 'Proyectos', url: '#work', icon: '🔧' },
+          { name: 'Electrónica', url: 'Electronica.html', icon: '🔌' },
+          { name: 'Programación', url: 'programacion.html', icon: '💻' }
+        ],
+        'alumno': [
+          { name: 'Mi Espacio', url: 'menual.html', icon: '👨‍🎓' },
+          { name: 'Chat Escolar', url: 'home.html', icon: '💬' },
+          { name: 'Proyectos', url: '#work', icon: '🔧' },
+          { name: 'Electrónica', url: 'Electronica.html', icon: '🔌' },
+          { name: 'Programación', url: 'programacion.html', icon: '💻' }
+        ]
+      };
+
+      const menuItems = quickMenus[userRole] || [];
+      showQuickAccessModal(menuItems);
+    }
+
+    function showQuickAccessModal(menuItems) {
+      // Crear modal dinámico
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      `;
+      
+      const content = document.createElement('div');
+      content.style.cssText = `
+        background: #2d2d2d;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 400px;
+        width: 90%;
+        color: white;
+        transform: scale(0.8);
+        transition: transform 0.3s ease;
+      `;
+      
+      content.innerHTML = `
+        <h3 style="text-align: center; margin-bottom: 20px; color: #4ecdc4;">
+          ⚡ Acceso Rápido
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+          ${menuItems.map(item => `
+            <a href="${item.url}" style="
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 8px;
+              padding: 15px;
+              background: rgba(255, 255, 255, 0.1);
+              border-radius: 10px;
+              text-decoration: none;
+              color: white;
+              transition: all 0.3s ease;
+            " onmouseover="this.style.background='rgba(78, 205, 196, 0.3)'" 
+               onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'">
+              <span style="font-size: 24px;">${item.icon}</span>
+              <span style="font-size: 14px; text-align: center;">${item.name}</span>
+            </a>
+          `).join('')}
+        </div>
+        <button onclick="this.closest('[style*=\"position: fixed\"]').remove()" 
+                style="
+                  position: absolute;
+                  top: 10px;
+                  right: 15px;
+                  background: none;
+                  border: none;
+                  color: #888;
+                  font-size: 20px;
+                  cursor: pointer;
+                ">×</button>
+      `;
+      
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+      
+      // Animar entrada
+      setTimeout(() => {
+        modal.style.opacity = '1';
+        content.style.transform = 'scale(1)';
+      }, 10);
+      
+      // Cerrar al hacer click fuera
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+    }
+
+    function showConfirmationToast(message) {
+      const toast = document.getElementById('navigationToast');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      toastMessage.innerHTML = `<i class="bi bi-check-circle" style="color: #4ecdc4;"></i> ${message}`;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    function logout() {
+      if (confirm('¿Estás seguro que deseas cerrar sesión?')) {
+        // Limpiar navegación
+        localStorage.removeItem('lastVisitedPage');
+        localStorage.removeItem('lastVisitTime');
+        
+        // Limpiar sesión
+        localStorage.removeItem('sessionToken');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userName');
+        sessionStorage.clear();
+        
+        fetch('forms/auth.php?action=logout', {
+          method: 'GET'
+        }).then(() => {
+          window.location.reload();
+        }).catch(() => {
+          window.location.reload();
+        });
+      }
+    }
+
+    // Registrar navegación al salir de la página
+    window.addEventListener('beforeunload', function() {
+      const currentPage = window.location.pathname.split('/').pop();
+      if (pageConfig[currentPage]) {
+        localStorage.setItem('lastVisitedPage', currentPage);
+        localStorage.setItem('lastVisitTime', new Date().getTime());
+      }
+    });
+  </script>
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
@@ -514,5 +1164,4 @@
   <script src="assets/js/main.js"></script>
 
 </body>
-
 </html>

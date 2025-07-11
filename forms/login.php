@@ -57,14 +57,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     setcookie('session_token', $token, time() + (30 * 24 * 60 * 60), "/");
                 }
 
+                // Actualizar último acceso
+                $update_access = $conn->prepare("UPDATE usuarios SET ultimo_acceso = CURRENT_TIMESTAMP WHERE id = ?");
+                $update_access->bind_param("i", $user_id);
+                $update_access->execute();
+
                 // Guardar sesión
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['Usuario'] = $Usuario;
-                $_SESSION['rol'] = $Rol;
+                $_SESSION['rol'] = $user_role;
 
-                echo json_encode(['success' => true]);
+                // Determinar la página de redirección según el rol
+                $redirect_page = '';
+                switch($user_role) {
+                    case 'admin':
+                        $redirect_page = 'menuad.html';
+                        break;
+                    case 'profesor':
+                        $redirect_page = 'menupr.html';
+                        break;
+                    case 'alumno':
+                        $redirect_page = 'menual.html';
+                        break;
+                    default:
+                        $redirect_page = 'index.html';
+                        break;
+                }
+
+                echo json_encode([
+                    'success' => true, 
+                    'rol' => $user_role,
+                    'redirect' => $redirect_page,
+                    'message' => 'Login exitoso'
+                ]);
             } else {
-                echo json_encode(['success' => false, 'message' => 'El rol seleccionado no coincide.']);
+                echo json_encode(['success' => false, 'message' => 'El rol seleccionado no coincide con tu cuenta.']);
             }
         } else {
             echo json_encode(['success' => false, 'message' => 'Contraseña incorrecta.']);
@@ -76,5 +103,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Cerrar conexión
     $stmt->close();
     $conn->close();
+} else {
+    // Si no es POST, redirigir al login
+    header("Location: Login.html");
+    exit();
 }
 ?>

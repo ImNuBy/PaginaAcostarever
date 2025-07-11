@@ -1,11 +1,9 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Menu</title>
+    <title>Menu - Administrador</title>
     <link rel="stylesheet" href="css/style.css" />
     <style>
      /* Estilo adicional para el botón E.E.S.T N2 */
@@ -27,39 +25,121 @@
         #schoolButton:hover {
           background-color: #ddd;
         }
+        
+        /* Estilo para información del usuario */
+        #userInfo {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          padding: 10px 15px;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: white;
+          border-radius: 5px;
+          z-index: 100;
+          font-size: 14px;
+        }
+        
+        #logoutBtn {
+          background-color: #ff4444;
+          color: white;
+          border: none;
+          padding: 5px 10px;
+          margin-left: 10px;
+          border-radius: 3px;
+          cursor: pointer;
+          font-size: 12px;
+        }
+        
+        #logoutBtn:hover {
+          background-color: #cc0000;
+        }
     </style>
   </head>
   <body>
    <!-- Botón E.E.S.T N2 -->
-   <a href="Index.html" id="schoolButton">E.E.S.T N2</a>
+   <a href="index.html" id="schoolButton">E.E.S.T N°2</a>
+   
+   <!-- Información del usuario -->
+   <div id="userInfo">
+     <span>👑 Admin: <span id="userName">Cargando...</span></span>
+     <button id="logoutBtn" onclick="logout()">Cerrar Sesión</button>
+   </div>
+   
    <!--Menu -->
     <ul class="menu">
       <div class="menuToggle"><ion-icon name="add-outline"></ion-icon></div>
       <li style="--i: 0; --clr: #ff2972">
-        <a href="home.html"><ion-icon name="home-outline"></ion-icon></a>
+        <a href="home.html" title="Inicio"><ion-icon name="home-outline"></ion-icon></a>
       </li>
       <li style="--i: 1; --clr: #fee800">
-        <a href="#"><ion-icon name="settings-outline"></ion-icon></a>
+        <a href="#" title="Gestión de Usuarios"><ion-icon name="people-circle-outline"></ion-icon></a>
       </li>
       <li style="--i: 2; --clr: #04fc43">
-        <a href="#"><ion-icon name="mail-outline"></ion-icon></a>
+        <a href="#" title="Gestión de Cursos"><ion-icon name="school-outline"></ion-icon></a>
       </li>
       <li style="--i: 3; --clr: #fe00f1">
-        <a href="#"><ion-icon name="key-outline"></ion-icon></a>
+        <a href="#" title="Gestión de Materias"><ion-icon name="library-outline"></ion-icon></a>
       </li>
       <li style="--i: 4; --clr: #00b0fe">
-        <a href="#"><ion-icon name="camera-outline"></ion-icon></a>
+        <a href="#" title="Reportes y Estadísticas"><ion-icon name="analytics-outline"></ion-icon></a>
       </li>
       <li style="--i: 5; --clr: #fea600">
-        <a href="#"><ion-icon name="game-controller-outline"></ion-icon></a>
+        <a href="#" title="Gestión de Proyectos"><ion-icon name="construct-outline"></ion-icon></a>
       </li>
       <li style="--i: 6; --clr: #a529ff">
-        <a href="#"><ion-icon name="person-outline"></ion-icon></a>
+        <a href="#" title="Configuración del Sistema"><ion-icon name="settings-outline"></ion-icon></a>
       </li>
       <li style="--i: 7; --clr: #01bdab">
-        <a href="#"><ion-icon name="videocam-outline"></ion-icon></a>
+        <a href="#" title="Gestión de Noticias"><ion-icon name="newspaper-outline"></ion-icon></a>
       </li>
     </ul>
+    
+    <script>
+      // Verificar autenticación al cargar la página
+      document.addEventListener('DOMContentLoaded', function() {
+        verificarAutenticacion();
+        cargarInfoUsuario();
+      });
+      
+      function verificarAutenticacion() {
+        const sessionToken = localStorage.getItem('sessionToken');
+        const userRole = localStorage.getItem('userRole');
+        
+        if (!sessionToken || userRole !== 'admin') {
+          // Si no hay sesión o no es admin, redirigir al login
+          window.location.href = 'Login.html';
+          return;
+        }
+      }
+      
+      function cargarInfoUsuario() {
+        const userName = localStorage.getItem('userName');
+        if (userName) {
+          document.getElementById('userName').textContent = userName;
+        }
+      }
+      
+      function logout() {
+        // Limpiar localStorage
+        localStorage.removeItem('sessionToken');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userName');
+        
+        // Limpiar sessionStorage
+        sessionStorage.clear();
+        
+        // Llamar al backend para limpiar la sesión del servidor
+        fetch('forms/auth.php?action=logout', {
+          method: 'GET'
+        }).then(() => {
+          window.location.href = 'Login.html';
+        }).catch(() => {
+          // Si falla la llamada al servidor, redirigir de todas formas
+          window.location.href = 'Login.html';
+        });
+      }
+    </script>
+    
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"

@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,8 +21,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <link href="assets/css/style.css" rel="stylesheet">
-
-
 </head>
 
 <script> 
@@ -35,21 +30,38 @@
   
     // Verifica si hay una sesión activa
     if (localStorage.getItem('sessionToken')) {
-      // Redirige a la página principal
-      window.location.href = 'menu.html';
+      // Verificar el rol almacenado y redirigir
+      const userRole = localStorage.getItem('userRole');
+      redirectByRole(userRole);
     }
-  
-    
   });
+  
+  // Función para redirigir según el rol
+  function redirectByRole(role) {
+    switch(role) {
+      case 'admin':
+        window.location.href = 'menuad.html';
+        break;
+      case 'profesor':
+        window.location.href = 'menupr.html';
+        break;
+      case 'alumno':
+        window.location.href = 'menual.html';
+        break;
+      default:
+        window.location.href = 'index.html';
+        break;
+    }
+  }
   
   // Para cerrar sesión
   function logout() {
     localStorage.removeItem('sessionToken');
+    localStorage.removeItem('userRole');
     sessionStorage.removeItem('sessionToken');
-    window.location.href = 'login.html';
+    sessionStorage.removeItem('userRole');
+    window.location.href = 'Login.html';
   }
-  
-
 </script>
 
 <style>
@@ -318,7 +330,92 @@ opacity: 0; /* Inicialmente oculta el texto */
 opacity: 1; /* Muestra el texto cuando el input está enfocado */
 }
 
+/* Estilo adicional para mensajes de estado */
+.login-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    display: none;
+}
+
+.login-message.success {
+    background-color: rgba(0, 255, 0, 0.2);
+    color: #00ff00;
+    border: 1px solid #00ff00;
+}
+
+.login-message.error {
+    background-color: rgba(255, 0, 0, 0.2);
+    color: #ff0000;
+    border: 1px solid #ff0000;
+}
+
+.login-message.loading {
+    background-color: rgba(255, 255, 0, 0.2);
+    color: #ffff00;
+    border: 1px solid #ffff00;
+}
+
+/* Estilo base del botón de registro */
+.custom-signup2{
+position: relative;
+display: inline-block;
+padding: 10px 20px;
+font-size: 16px;
+color: #03e9f4;
+text-decoration: none;
+
+border: 2px solid transparent;
+border-radius: 5px;
+overflow: hidden;
+}
+
+/* Estilo del resplandor */
+.custom-signup2::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: transparent;
+border-radius: 5px;
+z-index: -1; /* Colocar detrás del contenido del botón */
+transition: transform 0.6s ease-out;
+}
+
+/* Estilo del resplandor cuando el mouse pasa sobre el botón */
+.custom-signup2:hover::before {
+transform: scale(1.2); /* Ajustar el tamaño del resplandor */
+}
+        
+#custom-Submit {
+color: #03e9f4; /* Color del texto similar al botón Cancelar */
+font-size: 18px; /* Tamaño del texto similar al botón Cancelar */
+background-color: transparent; /* Fondo transparente similar al botón Cancelar */
+border: none; /* Borde transparente similar al botón Cancelar */
+cursor: pointer; /* Cambiar el cursor al pasar sobre el botón similar al botón Cancelar */
+}
+
+#botonOlvidar {
+color: #03e9f4; /* Color del texto similar al botón Cancelar */
+font-size: 18px; /* Tamaño del texto similar al botón Cancelar */
+background-color: transparent; /* Fondo transparente similar al botón Cancelar */
+border: none; /* Borde transparente similar al botón Cancelar */
+cursor: pointer; /* Cambiar el cursor al pasar sobre el botón similar al botón Cancelar */
+}
+
+#FalseLogin {
+color: #03e9f4; /* Color del texto similar al botón Cancelar */
+font-size: 18px; /* Tamaño del texto similar al botón Cancelar */
+background-color: transparent; /* Fondo transparente similar al botón Cancelar */
+border: none; /* Borde transparente similar al botón Cancelar */
+cursor: pointer; /* Cambiar el cursor al pasar sobre el botón similar al botón Cancelar */
+}
 </style>
+
 <!-- ======= Header ======= -->
 <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center justify-content-between">
@@ -341,28 +438,32 @@ opacity: 1; /* Muestra el texto cuando el input está enfocado */
   <div class="Calculadora elecciones">
     <h1 class="hero-title mb-4">Técnica N°2</h1>
     
-    <form action="/forms/login.php" method="POST" id="myForm">
+    <!-- Mensaje de estado del login -->
+    <div id="loginMessage" class="login-message"></div>
+    
+    <form action="forms/login.php" method="POST" id="myForm">
       <div class="form-row">
-        <label for="eleccion" class="form-label">Que sos?</label>
+        <label for="eleccion" class="form-label">¿Qué sos?</label>
         <select name="eleccion" id="eleccion">
           <option value="alumno">Estudiante</option>
           <option value="profesor">Personal Escolar</option>
+          <option value="admin">Administrador</option>
         </select>
       </div>
       <div class="form-row">
         <label for="txtusuario" class="form-label">Usuario:</label>
-        <input type="text" name="txtusuario" id="txtusuario"> 
+        <input type="text" name="txtusuario" id="txtusuario" required> 
       </div>
       <div class="form-row">
         <label for="txtpassword" class="form-label">Contraseña:</label>
         
         <div class="password-input-container">
-          <input type="password" name="txtpassword" id="txtpassword"> 
+          <input type="password" name="txtpassword" id="txtpassword" required> 
           <button type="button" id="togglePassword" class="toggle-password">
             <i id="eyeIcon" class="far fa-eye"></i>
           </button>
           <label>
-            <input type="checkbox" id="rememberMe"> Mantener sesión iniciada
+            <input type="checkbox" id="rememberMe" name="rememberMe"> Mantener sesión iniciada
           </label>
         </div>
       </div>
@@ -370,10 +471,13 @@ opacity: 1; /* Muestra el texto cuando el input está enfocado */
       <input type="submit" value="Ingresar" id="Login" style="display: none;">
       <a href="#" id="FalseLogin" class="custom-signup">
         <span></span>
-        
+        <span></span>
+        <span></span>
+        <span></span>
         Login
+      </a>
       
-        <div style="margin-left: 100px;"></div>
+      <div style="margin-left: 100px;"></div>
 
       <a href="#" id="custom-Submit" class="custom-signup">
         <span></span>
@@ -382,81 +486,20 @@ opacity: 1; /* Muestra el texto cuando el input está enfocado */
         <span></span>
         Sign Up
       </a>
-      </a>
+      
       <a href="#" id="botonOlvidar" class="custom-signup2">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
-        Olvidaste tu contraseña?
+        ¿Olvidaste tu contraseña?
       </a>
-      
-
-      
-
-        <style> 
-            /* Estilo base del botón de registro */
-  .custom-signup2{
-    position: relative;
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #03e9f4;
-    text-decoration: none;
-  
-    border: 2px solid transparent;
-    border-radius: 5px;
-    overflow: hidden;
-  }
-
-  /* Estilo del resplandor */
-  .custom-signup2::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    border-radius: 5px;
-    z-index: -1; /* Colocar detrás del contenido del botón */
-    transition: transform 0.6s ease-out;
-  }
-
-  /* Estilo del resplandor cuando el mouse pasa sobre el botón */
-  .custom-signup2:hover::before {
-    transform: scale(1.2); /* Ajustar el tamaño del resplandor */
-  }
-            
-  #custom-Submit {
-    color: #03e9f4; /* Color del texto similar al botón Cancelar */
-    font-size: 18px; /* Tamaño del texto similar al botón Cancelar */
-    background-color: transparent; /* Fondo transparente similar al botón Cancelar */
-    border: none; /* Borde transparente similar al botón Cancelar */
-    cursor: pointer; /* Cambiar el cursor al pasar sobre el botón similar al botón Cancelar */
-  }
-  
-  #botonOlvidar {
-    color: #03e9f4; /* Color del texto similar al botón Cancelar */
-    font-size: 18px; /* Tamaño del texto similar al botón Cancelar */
-    background-color: transparent; /* Fondo transparente similar al botón Cancelar */
-    border: none; /* Borde transparente similar al botón Cancelar */
-    cursor: pointer; /* Cambiar el cursor al pasar sobre el botón similar al botón Cancelar */
-  }
-  
-  #FalseLogin {
-    color: #03e9f4; /* Color del texto similar al botón Cancelar */
-    font-size: 18px; /* Tamaño del texto similar al botón Cancelar */
-    background-color: transparent; /* Fondo transparente similar al botón Cancelar */
-    border: none; /* Borde transparente similar al botón Cancelar */
-    cursor: pointer; /* Cambiar el cursor al pasar sobre el botón similar al botón Cancelar */
-  }</style>
    </form>
       
 <!--Sign up-->
 <form action="forms/SignUp.php" method="POST" id="signupForm" style="display: none;">
   <div class="form-row">
-    <label for="eleccion" class="form-label">Que sos?</label>
+    <label for="eleccion" class="form-label">¿Qué sos?</label>
     <select name="eleccion" id="eleccionSU">
       <option value="alumno">Estudiante</option>
       <option value="profesor">Personal Escolar</option>
@@ -464,13 +507,13 @@ opacity: 1; /* Muestra el texto cuando el input está enfocado */
   </div>
   <div class="form-row">
     <label for="txtusuario" class="form-label">Nuevo Usuario:</label>
-    <input type="text" name="txtNewusuario" id="txtNewusuario"> 
+    <input type="text" name="txtNewusuario" id="txtNewusuario" required> 
   </div>
   <div class="form-row">
     <label for="txtpassword" class="form-label">Nueva Contraseña:</label>
     
     <div class="password-input-container">
-      <input type="password" name="txtNewpassword" id="txtNewpassword"> 
+      <input type="password" name="txtNewpassword" id="txtNewpassword" required> 
       <button type="button" id="toggleNPassword" class="toggle-password">
         <i id="NeyeIcon" class="far fa-eye"></i>
       </button>
@@ -484,10 +527,6 @@ opacity: 1; /* Muestra el texto cuando el input está enfocado */
     Sign Up
   </a>
   <input type="submit" value="Ingresar" id="SignUp" style="display: none;">
-  <button type="button" id="buttonSignUp" class="custom-submit"  style="display: none;">
-    Sign Up
-    <div style="margin-left: 100px;"></div>
-  </button>
 
   <a href="#" id="cancelSignup" class="custom-signup">
     <span></span>
@@ -496,12 +535,12 @@ opacity: 1; /* Muestra el texto cuando el input está enfocado */
     <span></span>
     Cancel
   </a>
-  </a>
 </form>
+
 <!--RecupForm-->
 <form action="forms/Recuperarpass.php" method="POST" id="RecupForm" style="display: none;">
   <div class="form-row">
-    <label for="eleccion" class="form-label">Que sos?</label>
+    <label for="eleccion" class="form-label">¿Qué sos?</label>
     <select name="eleccion" id="eleccionSU2">
       <option value="alumno">Estudiante</option>
       <option value="profesor">Personal Escolar</option>
@@ -509,11 +548,11 @@ opacity: 1; /* Muestra el texto cuando el input está enfocado */
   </div>
   <div class="form-row">
     <label for="txtRecusuario" class="form-label">Ingrese su Usuario:</label>
-    <input type="text" name="txtRecusuario" id="txtRecusuario"> 
+    <input type="text" name="txtRecusuario" id="txtRecusuario" required> 
   </div>
   <div class="form-row">
     <label for="txtMail" class="form-label">Ingrese un Mail:</label>
-    <input type="text" name="txtMail" id="txtMail"> 
+    <input type="email" name="txtMail" id="txtMail" required> 
   </div>
   <div class="form-row" id="codigoRow" style="display: none;">
     <label for="txtCodigo" class="form-label">Ingrese el Código de Verificación:</label>
@@ -524,13 +563,9 @@ opacity: 1; /* Muestra el texto cuando el input está enfocado */
     <span></span>
     <span></span>
     <span></span>
-    Mandar Codigo
+    Mandar Código
   </a>
   <input type="submit" value="Ingresar" id="MandarCodigo" style="display: none;">
-  <button type="button" id="BotonMandarCodigo" class="custom-submit"  style="display: none;">
-    Mandar Codigo
-    <div style="margin-left: 100px;"></div>
-  </button>
 
   <a href="#" id="cancelRecup" class="custom-signup">
     <span></span>
@@ -539,37 +574,48 @@ opacity: 1; /* Muestra el texto cuando el input está enfocado */
     <span></span>
     Cancel
   </a>
-  </a>
 </form>
- 
-
-
 
 <script>
-  // Event listener para el botón "Cancelar Recuperacion"
+// Función para mostrar mensajes de estado
+function showMessage(message, type) {
+  const messageDiv = document.getElementById('loginMessage');
+  messageDiv.textContent = message;
+  messageDiv.className = `login-message ${type}`;
+  messageDiv.style.display = 'block';
+  
+  // Ocultar el mensaje después de 5 segundos si no es de loading
+  if (type !== 'loading') {
+    setTimeout(() => {
+      messageDiv.style.display = 'none';
+    }, 5000);
+  }
+}
+
+// Event listener para el botón "Cancelar Recuperacion"
 document.getElementById('cancelRecup').addEventListener('click', function (event) {
   event.preventDefault();
   document.getElementById('RecupForm').style.display = 'none';
   document.getElementById('myForm').style.display = 'block';
 });
 
-  // Event listener para el botón "RecupPass"
+// Event listener para el botón "RecupPass"
 document.getElementById('botonOlvidar').addEventListener('click', function (event) {
   event.preventDefault();
   document.getElementById('myForm').style.display = 'none';
   document.getElementById('RecupForm').style.display = 'block';
 });
 
-   // Event listener para el botón "Login"
+// Event listener para el botón "Mandar Código"
 document.getElementById('MandarCodigoFalse').addEventListener('click', function (event) {
-  event.preventDefault(); // Evita el comportamiento predeterminado del enlace
-  document.getElementById('MandarCodigo').click(); // Simula el clic en el botón de enviar
+  event.preventDefault();
+  document.getElementById('MandarCodigo').click();
 });
 
-  // Event listener para el botón "Login"
+// Event listener para el botón "Login"
 document.getElementById('FalseLogin').addEventListener('click', function (event) {
-  event.preventDefault(); // Evita el comportamiento predeterminado del enlace
-  document.getElementById('Login').click(); // Simula el clic en el botón de enviar
+  event.preventDefault();
+  document.getElementById('Login').click();
 });
 
 // Event listener para el botón "Sign Up"
@@ -586,29 +632,23 @@ document.getElementById('cancelSignup').addEventListener('click', function (even
   document.getElementById('myForm').style.display = 'block';
 });
 
-// Event listener para el botón de enviar del formulario de registro
-
-  document.getElementById('falsesignup').addEventListener('click', function (event) {
-    event.preventDefault(); // Evitar envío automático del formulario
-    console.log("Botón Sign Up clickeado"); // Verificar si se está ejecutando la función
-      // Obtener la contraseña ingresada
-      var contraseña = document.getElementById("txtNewpassword").value;
-    
-      // Verificar que la contraseña cumpla con los requisitos
-      var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-      if (!regex.test(contraseña)) {
-        // Mostrar mensaje de error si la contraseña no cumple con los requisitos
-        alert("La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial, y tener al menos 8 caracteres de longitud.");
-        return false; // Detener el envío del formulario si la contraseña no es válida
-      }
-    
-      // Si la contraseña cumple con los requisitos, enviar el formulario
-      document.getElementById('signupForm').submit();
-    });
+// Event listener para el formulario de registro
+document.getElementById('falsesignup').addEventListener('click', function (event) {
+  event.preventDefault();
+  console.log("Botón Sign Up clickeado");
   
-;
+  var contraseña = document.getElementById("txtNewpassword").value;
+  var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  
+  if (!regex.test(contraseña)) {
+    showMessage("La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial, y tener al menos 8 caracteres de longitud.", "error");
+    return false;
+  }
+  
+  document.getElementById('signupForm').submit();
+});
 
-// Event listener para el botón togglePassword
+// Event listener para mostrar/ocultar contraseña (registro)
 document.getElementById('toggleNPassword').addEventListener('click', function() {
   var passwordInput = document.getElementById('txtNewpassword');
   var eyeIcon = document.getElementById('NeyeIcon');
@@ -624,7 +664,7 @@ document.getElementById('toggleNPassword').addEventListener('click', function() 
   }
 });
 
-// Event listener para el botón togglePassword login
+// Event listener para mostrar/ocultar contraseña (login)
 document.getElementById('togglePassword').addEventListener('click', function() {
   var passwordInput = document.getElementById('txtpassword');
   var eyeIcon = document.getElementById('eyeIcon');
@@ -640,50 +680,66 @@ document.getElementById('togglePassword').addEventListener('click', function() {
   }
 });
 
-
+// SISTEMA DE LOGIN PRINCIPAL
 document.getElementById('myForm').addEventListener('submit', function(event) {
-  event.preventDefault(); // Evita el envío automático del formulario
+  event.preventDefault();
   
-  // Obtener los valores de usuario, contraseña, y rol del formulario
+  // Mostrar mensaje de carga
+  showMessage('Verificando credenciales...', 'loading');
+  
+  // Obtener los valores del formulario
   var usuario = document.getElementById('txtusuario').value;
   var contraseña = document.getElementById('txtpassword').value;
-  var rol = document.getElementById('eleccion').value; // Obtener el rol seleccionado
+  var rol = document.getElementById('eleccion').value;
+  var rememberMe = document.getElementById('rememberMe').checked;
 
-  // Enviar una solicitud AJAX para verificar las credenciales
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'forms/login.php');
-  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-  xhr.onload = function() {
-      if (xhr.status === 200) {
-          // Si la respuesta del servidor es éxito, redirigir a la página de inicio
-          if (xhr.responseText.trim() === 'success') {
-              window.location.href = 'Menu.html';
-          } else {
-              // Si las credenciales son incorrectas, mostrar un mensaje de error
-              alert('Usuario, contraseña o rol incorrectos');
-          }
-      } else {
-          // Si hay un error en la solicitud AJAX, mostrar un mensaje de error
-          alert('Error en la solicitud');
-      }
-  };
+  // Crear FormData para enviar los datos
+  var formData = new FormData();
+  formData.append('txtusuario', usuario);
+  formData.append('txtpassword', contraseña);
+  formData.append('eleccion', rol);
+  if (rememberMe) {
+    formData.append('rememberMe', '1');
+  }
 
-  // Enviar los datos del formulario al servidor, incluyendo el rol
-  xhr.send('txtusuario=' + encodeURIComponent(usuario) + '&txtpassword=' + encodeURIComponent(contraseña) + '&rol=' + encodeURIComponent(rol));
+  // Enviar solicitud AJAX
+  fetch('forms/login.php', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Login exitoso
+      showMessage('¡Login exitoso! Redirigiendo...', 'success');
+      
+      // Guardar información de sesión
+      localStorage.setItem('sessionToken', 'active');
+      localStorage.setItem('userRole', data.rol);
+      localStorage.setItem('userName', usuario);
+      
+      // Redirigir después de 1.5 segundos
+      setTimeout(() => {
+        window.location.href = data.redirect;
+      }, 1500);
+      
+    } else {
+      // Login fallido
+      showMessage(data.message || 'Error en el login', 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showMessage('Error de conexión. Intenta nuevamente.', 'error');
+  });
 });
-
-      </script>
-    
-    
-  </div>
-
-  
-  
+</script>
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/typed.js/typed.umd.js"></script>
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>

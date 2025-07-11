@@ -1,518 +1,720 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Escolar - E.E.S.T N°2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-  <title> E.E.S.T N°2</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+        .chat-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
 
- 
-  <link href="assets/img/escudo.png" rel="icon">
-  <link href="assets/img/escudo.png" rel="escudo del colegio">
+        .chat-header {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
 
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
 
-  <link href="assets/css/style.css" rel="stylesheet">
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
 
+        .message {
+            margin: 10px 0;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 70%;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
 
- 
-  <!-- ======================================================== -->
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.sent {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.received {
+            background: #e9ecef;
+            color: #333;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-info {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .message.sent .message-info {
+            text-align: right;
+        }
+
+        .message-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .message-input {
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            padding: 12px 20px;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+
+        .message-input:focus {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 0.2rem rgba(78, 205, 196, 0.25);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .online-users {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            margin: 2px;
+            font-size: 12px;
+        }
+
+        .typing-indicator {
+            padding: 10px 20px;
+            font-style: italic;
+            color: #6c757d;
+            display: none;
+        }
+
+        .typing-dots {
+            display: inline-block;
+        }
+
+        .typing-dots::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .emoji-picker {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 10px;
+            position: absolute;
+            bottom: 70px;
+            right: 20px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .emoji {
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+
+        .emoji:hover {
+            background: #f8f9fa;
+        }
+
+        .stats-bar {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
 </head>
-
 <body>
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top">
-    <div class="container d-flex align-items-center justify-content-between">
-
-      <h1 class="logo"><a href="index.html">E.E.S.T N°2</a></h1>
-      <!-- Uncomment below if you prefer to use an image logo -->
-      <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a class="nav-link scrollto active" href="#hero">Inicio</a></li>
-          <li><a class="nav-link scrollto" href="#about">Nosotros</a></li>
-          <li><a class="nav-link scrollto" href="#services">Orientaciones</a></li>
-          <li><a class="nav-link scrollto " href="#work">Proyectos</a></li>
-        
-          <li><a class="nav-link scrollto" href="#contact">Contacto</a></li>
-          <li><a href="Menu.html" >Menu</a></li>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
-
-    </div>
-  </header><!-- End Header -->
-
-  <!-- ======= Hero Section ======= -->
-  <div id="hero" class="hero route bg-image" style="background-image: url(assets/img/colegio.png)">
-    <div class="overlay-itro"></div>
-    <div class="hero-content display-table">
-      <div class="table-cell">
-        <div class="container">
-          <!--<p class="display-6 color-d">Hello, world!</p>-->
-          <h1 class="hero-title mb-4">Técnica N°2</h1>
-          <p class="hero-subtitle"><span class="typed" data-typed-items="Programación, Electrónica"></span></p>
-          <!-- <p class="pt-3"><a class="btn btn-primary btn js-scroll px-4" href="#about" role="button">Learn More</a></p> -->
-        </div>
-      </div>
-    </div>
-  </div><!-- End Hero Section -->
-
-  <main id="main">
-
-    <!-- ======= About Section ======= -->
-    <section id="about" class="about-mf sect-pt4 route">
-      <div class="container">
+    <div class="container-fluid">
+        <!-- Header con información del usuario actual -->
         <div class="row">
-          <div class="col-sm-12">
-            <div class="box-shadow-full">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="row">
-                    <div class="col-sm-6 col-md-5">
-                      <div class="about-img">
-                        <img src="assets/img/escudo2.png" class="img-fluid rounded b-shadow-a" alt="">
-                      </div>
-                    </div>
-                    <div class="col-sm-6 col-md-7">
-                      <div class="about-info">
-                        <p><span class="title-s">Nombre: </span> <span>Escuela Técnica 2</span></p>
-                        <p><span class="title-s">Año de fundación: 1993 </span> <span></span></p>
-                        <p><span class="title-s">Email: </span> <span>eest2sanisidro@abc.gob.ar</span></p>
-                        <p><span class="title-s">Telefono: (+54) 1169024495 </span> <span></span></p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="skill-mf">
-                    <p class="title-s">Estudiantes</p>
-                    <span>Programación</span> <span class="pull-right">60%</span>
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  
-                    <span>Electronica</span> <span class="pull-right">40%</span>
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="about-me pt-4 pt-md-0">
-                    <div class="title-box-2">
-                      <h5 class="title-left">
-                        Informacion
-                      </h5>
-                    </div>
-                    <p class="lead">
-                      somos una institucion especializada en dos orientaciones con buenas salidas laborales las cuales son Electrónica y Programación, en esta escuela intentamos crear un ambiente saludable y respetuoso entre alumnos y profesores. <label for=""></label>
-                    </p>
-                   
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section><!-- End About Section -->
-
-    <!-- ======= Services Section ======= -->
-    <section id="services" class="services-mf pt-5 route">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="title-box text-center">
-              <h3 class="title-a">
-                Orientaciones
-              </h3>
-              <p class="subtitle-a">
-                Aprendamos sobre Electronica y Programacion Juntos
-              </p>
-              <div class="line-mf"></div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="divd">
-            <div class="service-box">
-              <div class="service-ico"><a href="Electronica.html">
-                <span class="ico-circle"><i class="bi bi-briefcase"  ></i></span>
-                </a>
-              </div>
-              <div class="service-content">
-                <h2 class="s-title">Electronica</h2>
-                <p class="s-description text-center">
-                
-
-              </div>
-            </div>
-          </div>
-          <div class="divd">
-            <div class="service-box">
-              <div class="service-ico"><a href="programacion.html">
-                <span class="ico-circle"><i class="bi bi-card-checklist"></i></span>
-                </a>
-              </div>
-              <div class="service-content">
-                <h2 class="s-title">Programación</h2>
-                <p class="s-description text-center">
-                  
-                </p>
-              </div>
-            </div>
-          </div>
-         
-         
-          
-          </div>
-        </div>
-      </div>
-    </section><!-- End Services Section -->
-
-      
-    </div><!-- End Counter Section -->
-
-    <!-- ======= Portfolio Section ======= -->
-    <section id="work" class="portfolio-mf sect-pt4 route">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="title-box text-center">
-              <h3 class="title-a">
-                Proyectos
-              </h3>
-              <p class="subtitle-a">
-                En esta seccion vas a encontrar algunos proyectos que se hicieron en la institucion.
-              </p>
-              <div class="line-mf"></div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                <div class="work-img">
-                  <img src="assets/img/work-1.jpg" alt="" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">Limpiador automatico</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Electronica</span> 
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="portfolio-details.html"> <span class="bi bi-plus-circle"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-2.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                <div class="work-img">
-                  <img src="assets/img/work-2.jpg" alt="" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">AutoParking</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Electronica</span> <span class="w-date"></span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="teslita.html"> <span class="bi bi-plus-circle"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-3.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                <div class="work-img">
-                  <img src="assets/img/work-3.jpg" alt="" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">Robot de Futbol</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Electronica</span>  <span class="w-date"></span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="futbolin.html"> <span class="bi bi-plus-circle"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-4.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                <div class="work-img">
-                  <img src="assets/img/tanque.png" alt="" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">Tanque</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Electronica</span> <span class="w-date"></span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="tanque.html"> <span class="bi bi-plus-circle"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-5.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                <div class="work-img">
-                  <img src="assets/img/brazo.png" alt="" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">Brazo Robot</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Electronica</span> <span class="w-date"></span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="Brazo.html"> <span class="bi bi-plus-circle"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-6.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                <div class="work-img">
-                  <img src="assets/img/work-6.jpg" alt="" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">tablero</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Ciclo basico</span>  <span class="w-date"></span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="Tablero.html"> <span class="bi bi-plus-circle"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section><!-- End Portfolio Section -->
-
-    <!-- ======= Testimonials Section ======= -->
-    <div class="testimonials paralax-mf bg-image" style="background-image: url(assets/img/colegio.png)">
-      <div class="overlay-mf"></div>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-
-            <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
-              <div class="swiper-wrapper">
-
-                <div class="swiper-slide">
-                  <div class="testimonial-box">
-                    <div class="author-test">
-                      <img width="200" src="assets/img/vanesa.jpg" alt="" class="rounded-circle b-shadow-a">
-                      <span class="author">Vanesa Aranda</span>
-                    </div>
-                    <div class="content-test">
-                      <p class="description lead">
-                     Directora de la institucion
-                      </p>
-                    </div>
-                  </div>
-                </div><!-- End testimonial item -->
-
-                <div class="swiper-slide">
-                  <div class="testimonial-box">
-                    <div class="author-test">
-                      <img width="200" src="assets/img/caretti.png" alt="" class="rounded-circle b-shadow-a">
-                      <span class="author">Miguel caretti</span>
-                    </div>
-                    <div class="content-test">
-                      <p class="description lead">
-                      Vicedirector de la institucion.
-                      </p>
-                    </div>
-                  </div>
-                </div><!-- End testimonial item -->
-              </div>
-              <div class="swiper-pagination"></div>
-            </div>
-
-            <!-- <div id="testimonial-mf" class="owl-carousel owl-theme">
-          
-        </div> -->
-          </div>
-        </div>
-      </div>
-    </div><!-- End Testimonials Section -->
-
-    
-    <!-- ======= Contact Section ======= -->
-    <section id="contact" class="paralax-mf footer-paralax bg-image sect-mt4 route" style="background-image: url(assets/img/colegio.png)">
-      <div class="overlay-mf"></div>
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="contact-mf">
-              <div id="contact" class="box-shadow-full">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="title-box-2">
-                      <h5 class="title-left">
-                      Ubicacion en el  mapa
-                      </h5>
-                    </div>
-                    <div>
-                      <form action="forms/contact.php" method="post" role="form" class="php-email-form">
-                        <div class="row">
-                          <div class="col-md-12 mb-3">
-                            <div class="form-group">
-                              
-                            </div>
-                          </div>
-                          <div class="col-md-12 mb-3">
-                            <div class="form-group">
-                        
-                            </div>
-                          </div>
-                          <div class="col-md-12 mb-3 mapa">
-                            <div class="form-group">
-                              <iframe width="500" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3288.9193341640507!2d-58.581477923535815!3d-34.479570550953454!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcbac98a320135%3A0x85ad55205e252b6a!2sEscuela%20Secundaria%20T%C3%A9cnica%20N%C2%B0%202%20de%20San%20Isidro!5e0!3m2!1ses-419!2sar!4v1699481240816!5m2!1ses-419!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                            </div>
-                          </div>
-                          <div class="col-md-12">
-                            <div class="form-group">
-                              
-                            </div>
-                          </div>
-                          <div class="col-md-12 text-center my-3">
-                           
-                          </div>
-                          <div class="col-md-12 text-center">
-                           
-                          </div>
+            <div class="col-12">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <h3><i class="bi bi-chat-dots"></i> Chat Escolar E.E.S.T N°2</h3>
+                        <div class="user-info" id="currentUserInfo">
+                            <i class="bi bi-person-circle"></i> <span id="currentUserName">Cargando...</span>
                         </div>
-                      </form>
                     </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="title-box-2 pt-4 pt-md-0 mapa">
-                      <h5 class="title-left">
-                       Redes
-                      </h5>
+
+                    <!-- Usuarios conectados -->
+                    <div class="online-users">
+                        <strong><i class="bi bi-people"></i> Usuarios activos:</strong>
+                        <div id="onlineUsersList" class="mt-2"></div>
                     </div>
-                    <div class="more-info">
-                     
-                      <ul class="list-ico">
-                        <li><span class="bi bi-geo-alt"></span>  Patagonia 514, B1609 ELL, Provincia de Buenos Aires</li>
-                        <li><span class="bi bi-phone"></span>  (+54) 1169024495</li>
-                        <li><span class="bi bi-envelope"></span> eest2sanisidro@abc.gob.ar</li>
-                      </ul>
+
+                    <!-- Área de mensajes -->
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="text-center text-muted">
+                            <i class="bi bi-chat-square-dots fs-1"></i>
+                            <p>¡Bienvenido al chat escolar! Los mensajes aparecerán aquí.</p>
+                        </div>
                     </div>
-                    <div class="socials">
-                      <ul>
-                        <li><a href="https://www.facebook.com/tecnicanro2/?locale=es_LA"><span class="ico-circle"><i class="bi bi-facebook"></i></span></a></li>
-                        <li><a href="https://www.instagram.com/somos_la_t2/"><span class="ico-circle"><i class="bi bi-instagram"></i></span></a></li>
-                  
-                      </ul>
+
+                    <!-- Indicador de escritura -->
+                    <div class="typing-indicator" id="typingIndicator">
+                        <span id="typingUser"></span> está escribiendo<span class="typing-dots"></span>
                     </div>
-                  </div>
+
+                    <!-- Input de mensaje -->
+                    <div class="message-input-container">
+                        <div class="row g-2">
+                            <div class="col">
+                                <textarea 
+                                    class="form-control message-input" 
+                                    id="messageInput" 
+                                    placeholder="Escribe tu mensaje aquí..." 
+                                    rows="1"
+                                    maxlength="500"></textarea>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn send-btn" id="emojiBtn" type="button">
+                                    <i class="bi bi-emoji-smile"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn send-btn" id="sendBtn" type="button">
+                                    <i class="bi bi-send"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Picker de emojis -->
+                    <div class="emoji-picker" id="emojiPicker">
+                        <div class="row g-1">
+                            <div class="col-auto emoji" data-emoji="😀">😀</div>
+                            <div class="col-auto emoji" data-emoji="😃">😃</div>
+                            <div class="col-auto emoji" data-emoji="😄">😄</div>
+                            <div class="col-auto emoji" data-emoji="😁">😁</div>
+                            <div class="col-auto emoji" data-emoji="😅">😅</div>
+                            <div class="col-auto emoji" data-emoji="😂">😂</div>
+                            <div class="col-auto emoji" data-emoji="🤣">🤣</div>
+                            <div class="col-auto emoji" data-emoji="😊">😊</div>
+                            <div class="col-auto emoji" data-emoji="😇">😇</div>
+                            <div class="col-auto emoji" data-emoji="🙂">🙂</div>
+                            <div class="col-auto emoji" data-emoji="😉">😉</div>
+                            <div class="col-auto emoji" data-emoji="😌">😌</div>
+                            <div class="col-auto emoji" data-emoji="😍">😍</div>
+                            <div class="col-auto emoji" data-emoji="😘">😘</div>
+                            <div class="col-auto emoji" data-emoji="😗">😗</div>
+                            <div class="col-auto emoji" data-emoji="😙">😙</div>
+                            <div class="col-auto emoji" data-emoji="😚">😚</div>
+                            <div class="col-auto emoji" data-emoji="🤗">🤗</div>
+                            <div class="col-auto emoji" data-emoji="🤔">🤔</div>
+                            <div class="col-auto emoji" data-emoji="😎">😎</div>
+                            <div class="col-auto emoji" data-emoji="🤓">🤓</div>
+                            <div class="col-auto emoji" data-emoji="😴">😴</div>
+                            <div class="col-auto emoji" data-emoji="👍">👍</div>
+                            <div class="col-auto emoji" data-emoji="👎">👎</div>
+                            <div class="col-auto emoji" data-emoji="👌">👌</div>
+                            <div class="col-auto emoji" data-emoji="✌️">✌️</div>
+                            <div class="col-auto emoji" data-emoji="🤞">🤞</div>
+                            <div class="col-auto emoji" data-emoji="👏">👏</div>
+                            <div class="col-auto emoji" data-emoji="🙌">🙌</div>
+                            <div class="col-auto emoji" data-emoji="❤️">❤️</div>
+                            <div class="col-auto emoji" data-emoji="💙">💙</div>
+                            <div class="col-auto emoji" data-emoji="💚">💚</div>
+                            <div class="col-auto emoji" data-emoji="💛">💛</div>
+                            <div class="col-auto emoji" data-emoji="🔥">🔥</div>
+                            <div class="col-auto emoji" data-emoji="⭐">⭐</div>
+                            <div class="col-auto emoji" data-emoji="🎉">🎉</div>
+                            <div class="col-auto emoji" data-emoji="🎊">🎊</div>
+                        </div>
+                    </div>
+
+                    <!-- Barra de estadísticas -->
+                    <div class="stats-bar">
+                        <span id="messageCount">0 mensajes</span> • 
+                        <span id="userCount">0 usuarios activos</span> •
+                        <span id="lastUpdate">Última actualización: Nunca</span>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </section><!-- End Contact Section -->
 
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="copyright-box">
-            <p class="copyright">&copy; Escuela <strong> Tecnica N°2</strong>. inicio</p>
-            <div class="credits">
-              <!--
-              All the links in the footer should remain intact.
-              You can delete the links only if you purchased the pro version.
-              Licensing information: https://bootstrapmade.com/license/
-              Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=DevFolio
-            -->
-             
-            </div>
-          </div>
+        <!-- Botón para volver -->
+        <div class="text-center mt-3">
+            <a href="index.html" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-house"></i> Volver al Inicio
+            </a>
         </div>
-      </div>
     </div>
-  </footer><!-- End  Footer -->
 
-  <div id="preloader"></div>
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        class SharedChatSystem {
+            constructor() {
+                this.currentUser = this.getCurrentUser();
+                this.chatKey = 'eest2_shared_chat';
+                this.usersKey = 'eest2_active_users';
+                this.typingKey = 'eest2_typing_users';
+                this.lastMessageId = 0;
+                
+                this.init();
+                this.loadMessages();
+                this.updateUsersList();
+                this.startMessagePolling();
+                this.registerUser();
+            }
 
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/typed.js/typed.umd.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
+            getCurrentUser() {
+                // Intentar obtener usuario de la sesión actual
+                const sessionUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+                if (sessionUser) {
+                    return JSON.parse(sessionUser);
+                }
 
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
+                // Si no hay usuario en sesión, crear uno temporal
+                const tempUser = {
+                    username: `Usuario_${Math.floor(Math.random() * 1000)}`,
+                    role: 'visitante',
+                    avatar: '👤',
+                    loginTime: new Date().getTime()
+                };
+                
+                sessionStorage.setItem('currentUser', JSON.stringify(tempUser));
+                return tempUser;
+            }
 
+            init() {
+                // Mostrar información del usuario actual
+                document.getElementById('currentUserName').textContent = 
+                    `${this.currentUser.avatar} ${this.currentUser.username} (${this.currentUser.role})`;
+
+                // Event listeners
+                document.getElementById('sendBtn').addEventListener('click', () => this.sendMessage());
+                document.getElementById('messageInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+
+                // Indicador de escritura
+                let typingTimer;
+                document.getElementById('messageInput').addEventListener('input', () => {
+                    this.setTyping(true);
+                    clearTimeout(typingTimer);
+                    typingTimer = setTimeout(() => this.setTyping(false), 2000);
+                });
+
+                // Emoji picker
+                document.getElementById('emojiBtn').addEventListener('click', () => {
+                    const picker = document.getElementById('emojiPicker');
+                    picker.style.display = picker.style.display === 'block' ? 'none' : 'block';
+                });
+
+                // Emojis
+                document.querySelectorAll('.emoji').forEach(emoji => {
+                    emoji.addEventListener('click', () => {
+                        const input = document.getElementById('messageInput');
+                        input.value += emoji.dataset.emoji;
+                        input.focus();
+                        document.getElementById('emojiPicker').style.display = 'none';
+                    });
+                });
+
+                // Cerrar emoji picker al hacer clic fuera
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.emoji-picker') && !e.target.closest('#emojiBtn')) {
+                        document.getElementById('emojiPicker').style.display = 'none';
+                    }
+                });
+
+                // Auto-resize textarea
+                const textarea = document.getElementById('messageInput');
+                textarea.addEventListener('input', () => {
+                    textarea.style.height = 'auto';
+                    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+                });
+            }
+
+            registerUser() {
+                const users = this.getActiveUsers();
+                const existingUser = users.find(u => u.username === this.currentUser.username);
+                
+                if (!existingUser) {
+                    users.push({
+                        ...this.currentUser,
+                        lastSeen: new Date().getTime()
+                    });
+                    localStorage.setItem(this.usersKey, JSON.stringify(users));
+                }
+
+                // Actualizar lastSeen cada 30 segundos
+                setInterval(() => {
+                    this.updateLastSeen();
+                }, 30000);
+
+                // Limpiar usuario al cerrar la ventana
+                window.addEventListener('beforeunload', () => {
+                    this.removeUser();
+                });
+            }
+
+            getActiveUsers() {
+                const users = JSON.parse(localStorage.getItem(this.usersKey) || '[]');
+                const fiveMinutesAgo = new Date().getTime() - (5 * 60 * 1000);
+                
+                // Filtrar usuarios activos (últimos 5 minutos)
+                return users.filter(user => user.lastSeen > fiveMinutesAgo);
+            }
+
+            updateLastSeen() {
+                const users = this.getActiveUsers();
+                const userIndex = users.findIndex(u => u.username === this.currentUser.username);
+                
+                if (userIndex !== -1) {
+                    users[userIndex].lastSeen = new Date().getTime();
+                    localStorage.setItem(this.usersKey, JSON.stringify(users));
+                }
+            }
+
+            removeUser() {
+                const users = this.getActiveUsers();
+                const filteredUsers = users.filter(u => u.username !== this.currentUser.username);
+                localStorage.setItem(this.usersKey, JSON.stringify(filteredUsers));
+            }
+
+            updateUsersList() {
+                const users = this.getActiveUsers();
+                const usersList = document.getElementById('onlineUsersList');
+                
+                if (users.length === 0) {
+                    usersList.innerHTML = '<span class="user-badge">No hay usuarios conectados</span>';
+                } else {
+                    usersList.innerHTML = users.map(user => 
+                        `<span class="user-badge">${user.avatar} ${user.username}</span>`
+                    ).join('');
+                }
+
+                // Actualizar contador
+                document.getElementById('userCount').textContent = `${users.length} usuarios activos`;
+            }
+
+            sendMessage() {
+                const input = document.getElementById('messageInput');
+                const message = input.value.trim();
+                
+                if (!message) return;
+
+                const messageObj = {
+                    id: this.generateMessageId(),
+                    text: message,
+                    username: this.currentUser.username,
+                    role: this.currentUser.role,
+                    avatar: this.currentUser.avatar,
+                    timestamp: new Date().getTime(),
+                    type: 'message'
+                };
+
+                this.saveMessage(messageObj);
+                this.displayMessage(messageObj, true);
+                
+                input.value = '';
+                input.style.height = 'auto';
+                this.setTyping(false);
+                
+                // Reproducir sonido de envío
+                this.playNotificationSound();
+            }
+
+            generateMessageId() {
+                return 'msg_' + new Date().getTime() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+
+            saveMessage(message) {
+                const messages = this.getMessages();
+                messages.push(message);
+                
+                // Mantener solo los últimos 100 mensajes
+                if (messages.length > 100) {
+                    messages.splice(0, messages.length - 100);
+                }
+                
+                localStorage.setItem(this.chatKey, JSON.stringify(messages));
+                this.updateStats();
+            }
+
+            getMessages() {
+                return JSON.parse(localStorage.getItem(this.chatKey) || '[]');
+            }
+
+            loadMessages() {
+                const messages = this.getMessages();
+                const chatContainer = document.getElementById('chatMessages');
+                
+                if (messages.length === 0) {
+                    chatContainer.innerHTML = `
+                        <div class="text-center text-muted">
+                            <i class="bi bi-chat-square-dots fs-1"></i>
+                            <p>¡Bienvenido al chat escolar! Los mensajes aparecerán aquí.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                chatContainer.innerHTML = '';
+                messages.forEach(message => {
+                    this.displayMessage(message, message.username === this.currentUser.username);
+                });
+
+                this.scrollToBottom();
+            }
+
+            displayMessage(message, isSent = false) {
+                const chatContainer = document.getElementById('chatMessages');
+                
+                // Remover mensaje de bienvenida si existe
+                const welcomeMsg = chatContainer.querySelector('.text-center.text-muted');
+                if (welcomeMsg) {
+                    welcomeMsg.remove();
+                }
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+                messageDiv.dataset.messageId = message.id;
+
+                const time = new Date(message.timestamp).toLocaleTimeString('es-ES', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const roleColors = {
+                    'alumno': '#3498db',
+                    'profesor': '#e74c3c',
+                    'admin': '#f39c12',
+                    'visitante': '#95a5a6'
+                };
+
+                messageDiv.innerHTML = `
+                    <div class="message-info">
+                        <span style="color: ${roleColors[message.role] || '#6c757d'};">
+                            ${message.avatar} ${message.username}
+                        </span> • ${time}
+                    </div>
+                    <div class="message-text">${this.escapeHtml(message.text)}</div>
+                `;
+
+                chatContainer.appendChild(messageDiv);
+                this.scrollToBottom();
+
+                // Reproducir sonido de notificación para mensajes de otros usuarios
+                if (!isSent) {
+                    this.playNotificationSound();
+                }
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            scrollToBottom() {
+                const chatContainer = document.getElementById('chatMessages');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            setTyping(isTyping) {
+                const typingUsers = JSON.parse(localStorage.getItem(this.typingKey) || '{}');
+                
+                if (isTyping) {
+                    typingUsers[this.currentUser.username] = {
+                        timestamp: new Date().getTime(),
+                        user: this.currentUser
+                    };
+                } else {
+                    delete typingUsers[this.currentUser.username];
+                }
+                
+                localStorage.setItem(this.typingKey, JSON.stringify(typingUsers));
+            }
+
+            updateTypingIndicator() {
+                const typingUsers = JSON.parse(localStorage.getItem(this.typingKey) || '{}');
+                const now = new Date().getTime();
+                const indicator = document.getElementById('typingIndicator');
+                
+                // Filtrar usuarios que están escribiendo actualmente (últimos 3 segundos)
+                const activeTypers = Object.values(typingUsers).filter(typer => 
+                    now - typer.timestamp < 3000 && typer.user.username !== this.currentUser.username
+                );
+
+                if (activeTypers.length > 0) {
+                    const userNames = activeTypers.map(t => t.user.username);
+                    let text;
+                    
+                    if (userNames.length === 1) {
+                        text = `${userNames[0]} está escribiendo`;
+                    } else if (userNames.length === 2) {
+                        text = `${userNames.join(' y ')} están escribiendo`;
+                    } else {
+                        text = `${userNames.length} usuarios están escribiendo`;
+                    }
+                    
+                    document.getElementById('typingUser').textContent = text.replace(' está escribiendo', '');
+                    indicator.style.display = 'block';
+                } else {
+                    indicator.style.display = 'none';
+                }
+            }
+
+            startMessagePolling() {
+                // Actualizar mensajes cada 2 segundos
+                setInterval(() => {
+                    this.checkForNewMessages();
+                    this.updateUsersList();
+                    this.updateTypingIndicator();
+                }, 2000);
+            }
+
+            checkForNewMessages() {
+                const messages = this.getMessages();
+                const chatContainer = document.getElementById('chatMessages');
+                const currentMessages = chatContainer.querySelectorAll('.message');
+                
+                if (messages.length > currentMessages.length) {
+                    // Hay nuevos mensajes
+                    const newMessages = messages.slice(currentMessages.length);
+                    newMessages.forEach(message => {
+                        this.displayMessage(message, message.username === this.currentUser.username);
+                    });
+                }
+                
+                this.updateStats();
+            }
+
+            updateStats() {
+                const messages = this.getMessages();
+                const users = this.getActiveUsers();
+                
+                document.getElementById('messageCount').textContent = `${messages.length} mensajes`;
+                document.getElementById('userCount').textContent = `${users.length} usuarios activos`;
+                document.getElementById('lastUpdate').textContent = 
+                    `Última actualización: ${new Date().toLocaleTimeString('es-ES')}`;
+            }
+
+            playNotificationSound() {
+                // Crear un sonido de notificación simple
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            }
+
+            // Método para limpiar el chat (solo admin)
+            clearChat() {
+                if (this.currentUser.role === 'admin') {
+                    localStorage.removeItem(this.chatKey);
+                    this.loadMessages();
+                    console.log('Chat limpiado por administrador');
+                }
+            }
+        }
+
+        // Inicializar el sistema de chat cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', () => {
+            window.chatSystem = new SharedChatSystem();
+            
+            // Comando secreto para limpiar chat (solo para admins)
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                    if (window.chatSystem.currentUser.role === 'admin') {
+                        if (confirm('¿Estás seguro de que quieres limpiar todo el chat?')) {
+                            window.chatSystem.clearChat();
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </body>
-
 </html>
